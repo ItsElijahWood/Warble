@@ -8,13 +8,13 @@ function App() {
 
   const createAccountContainerDisplayer = (e) => {
     e.preventDefault();
+    setDisplayCreateAccount(!displayCreateAccount);
+  };
 
-    if (displayCreateAccount === false) {
-      setDisplayCreateAccount(true);
-    } else {
-      window.location.href = "/";
-    }
-  }
+  const signContainerDisplayer = (e) => {
+    e.preventDefault();
+    setDisplayLogin(!displayLogin);
+  };
 
   const years = [];
   for (let year = new Date().getFullYear(); year >= 1900; year--) {
@@ -24,16 +24,6 @@ function App() {
   const DDA = [];
   for (let DD = 1; DD <= 31; DD++) {
     DDA.push(DD);
-  };
-
-  const signContainerDisplayer = (e) => {
-    e.preventDefault();
-
-    if (displayLogin === false) {
-      setDisplayLogin(true);
-    } else {
-      window.location.href = "/";
-    }
   }
 
   return (
@@ -41,100 +31,216 @@ function App() {
       <style>
         {`
           body {
+            margin: 0;
+            font-family: 'publicsans';
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-direction: column;
           }
-          @media (max-width: 1100px) {
-            .sign_in_container {
-              width: 100% !important;
-              height: 100% !important;
-              position: static !important;
-            }
-            .create_account_container {
-              width: 100% !important;
-              height: 100% !important;
-              position: static !important;
-            }
-            .create_account_container_format {
-              padding-left: 1rem !important;
-            }
-            .sign_in_format {
-              padding-left: 1rem !important;
-            }
-            .create_account_DOB {
-              padding-bottom: 0 !important;
-            }
+          .title {
+            font-size: 40px;
+            padding-top: 35vh;
+            padding-bottom: 2vh;
+            text-align: center;
+          }
+          .cta-button {
+            font-family: 'publicsans';
+            user-select: none;
+            text-decoration: none;
+            border-radius: 9999px;
+            padding: 10px 60px;
+            font-size: 1rem;
+            width: fit-content;
+            text-align: center;
+            display: block;
+            margin: 0.5rem auto;
+          }
+          .primary-button {
+            background-color: #0c97eb;
+            color: white;
+            border: 2px solid #0c97eb;
+	    margin-bottom: 6%;
+          }
+          .secondary-button {
+            color: #0c97eb;
+            border: 2px solid black;
+	    width: 135px;
+          }
+          .create_account_container,
+          .sign_in_container {
+            background-color: white;
+            width: 90%;
+            max-width: 600px;
+            height: 60%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 20px;
+            z-index: 10000;
+            padding: 1.5rem;
+          }
+          .create_account_container_format,
+          .sign_in_format {
+            padding: 0 1rem;
+          }
+          .create_account_container_format input,
+          .sign_in_format input,
+          select {
+            width: 100%;
+            margin-bottom: 1rem;
+            padding: 12px;
+            box-sizing: border-box;
+          }
+          .create_account_DOB {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+          }
+          .modal-overlay {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            position: fixed;
+            z-index: 9999;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(12, 151, 235, 0.3);
+            padding: 1rem;
+          }
+          .close-button {
+            font-size: 1.5rem;
+            cursor: pointer;
+            text-decoration: none;
+            color: black;
+            display: inline-block;
+            margin-bottom: 1rem;
+          }
+          .submit-button1 {
+            display: inline-block;
+            font-family: 'publicsans';
+            text-decoration: none;
+            border: 2px solid black;
+            cursor: pointer;
+            padding: 10px 50px;
+            border-radius: 9999px;
+            color: black;
+            margin-top: 12.5rem;
+          }	
+	  .submit-button2 {
+            display: inline-block;
+            font-family: 'publicsans';
+            text-decoration: none;
+            border: 2px solid black;
+            cursor: pointer;
+            padding: 10px 50px;
+            border-radius: 9999px;
+            color: black;
+            margin-top: 24.5rem;
           }
           @media (max-width: 480px) {
             .title {
-              font-size: 38px !important;
+              font-size: 8vw;
             }
+            .create_account_container,
+            .sign_in_container {
+              padding: 1rem;
+              height: 100%;
+	      max-height: 100%;
+	      top: 0;
+            }
+	    .modal-overlay {
+	      height: 100%;
+	      width: 100%;
+	      padding: 0;
+	    }
+	    .submit-button1 {
+	      margin-top: 3.5rem;
+	    }
+	    .submit-button2 {
+	      margin-top: 3.5rem;
+	    }
           }
         `}
       </style>
-      <p className="title" style={{ fontFamily: "publicsans", fontSize: "50px", paddingTop: "29vh", paddingBottom: "10px" }}>Start warbling today</p>
-      <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", gap: "3px"}}>
-          <a href="#create_account" onClick={createAccountContainerDisplayer} style={{ fontFamily: "publicsans", userSelect: "none", textDecoration: "none", border: "2px solid #0c97eb", cursor: "pointer", backgroundColor: "#0c97eb", padding: "10px 60px", borderBottomLeftRadius: "9999px", borderBottomRightRadius: "9999px", borderTopLeftRadius: "9999px", borderTopRightRadius: "9999px", color: "white" }}>Create an account</a><br />
-          <a href="#sign_in" onClick={signContainerDisplayer} style={{ fontFamily: "publicsans", userSelect: "none", textDecoration: "none", border: "2px solid black", cursor: "pointer", padding: "10px 102px", borderBottomLeftRadius: "9999px", borderBottomRightRadius: "9999px", borderTopLeftRadius: "9999px", borderTopRightRadius: "9999px", color: "#0c97eb" }}>Sign in</a>
-      </div>
-      {/*Displays when #create_account anchor is pressed.*/}
-      <div style={{ display: displayCreateAccount ? "flex" : "none", position: "absolute", zIndex: "9999", top: "0", left: "0", width: "100%", height: "100%", backgroundColor: "rgba(12, 151, 235, 0.3)" }}>
-        <div className="create_account_container" style={{ backgroundColor: "white", width: "600px", height: "650px", position: "absolute", top: "10%", zIndex: "10000", left: "30%", borderBottomLeftRadius: "20px", borderBottomRightRadius: "20px", borderTopLeftRadius: "20px", borderTopRightRadius: "20px", opacity: "1" }}>
-            <a href="#close_create_account" onClick={createAccountContainerDisplayer} style={{ fontFamily: "publicsans", textDecoration: "none", color: "black", cursor: "pointer", fontSize: "23px", paddingTop: "10px", paddingLeft: "15px", display: "inline-block" }}>X</a>
-            <div className="create_account_container_format" style={{ paddingLeft: "6.5rem" }}>
-              <p style={{ fontFamily: "publicsans", fontSize: "30px" }}>Create your account</p>
-              <form>
-                <input type="text" id="name" placeholder="Name" style={{ marginBottom: "20px", userSelect: "none", padding: "15px", width: "350px" }} required></input><br />
-                <input type="email" id="email_create_account" placeholder="Email" style={{ marginBottom: "20px", userSelect: "none", padding: "15px", width: "350px" }} required></input>
-                <p className="create_account_DOB" style={{ fontFamily: "publicsans", fontSize: "20px", paddingBottom: "5px" }}>Date of birth</p>
-                <div style={{ display: "flex", gap: "15px" }}>
-                  <select name="Day" defaultValue="day" id="DD" style={{ padding: "10px", userSelect: "none", width: "90px" }}> required
-                    <option value="day" disabled>Day</option>
-                    {DDA.map(D => (
-                      <option key={D} value={D}>{D}</option>
-                    ))}
-                  </select>
-                  <select name="Month" defaultValue="month" id="MM" style={{ padding: "10px", userSelect: "none", width: "160px" }}> required
-                    <option value="month" disabled>Month</option>
-                    <option id="M1">January</option>
-                    <option id="M2">February</option>
-                    <option id="M3">March</option>
-                    <option id="M4">April</option>
-                    <option id="M5">May</option>
-                    <option id="M6">June</option>
-                    <option id="M7">July</option>
-                    <option id="M8">August</option>
-                    <option id="M9">September</option>
-                    <option id="M10">October</option>
-                    <option id="M11">November</option>
-                    <option id="M12">December</option>
-                  </select>
-                  <select name="Year" defaultValue="year" id="YY" style={{ padding: "10px", userSelect: "none", width: "100px" }}>
-                    <option value="year" disabled>Year</option>
-                    {years.map(y => (
-                      <option key={y} value={y}>{y}</option>
-                    ))}
-                  </select>
-                </div>
-                <input type="password" id="password_create_account" placeholder="Password" style={{ marginTop: "20px", marginBottom: "30px", userSelect: "none", padding: "15px", width: "350px" }} required></input>
-                <a href="#create_account_submit" onClick={pushCreateAccountFormDataToBackend} style={{ position: "absolute", bottom: "5vh", left: "7vw", fontFamily: "publicsans", userSelect: "none", textDecoration: "none", border: "2px solid black", cursor: "pointer", padding: "10px 50px", borderBottomLeftRadius: "9999px", borderBottomRightRadius: "9999px", borderTopLeftRadius: "9999px", borderTopRightRadius: "9999px", color: "black" }}>Create Account</a>
-              </form>
-            </div>
+      <p className="title">Start warbling today</p>
+      <a href="#create_account" onClick={createAccountContainerDisplayer} className="cta-button primary-button">
+        Create an account
+      </a>
+      <a href="#sign_in" onClick={signContainerDisplayer} className="cta-button secondary-button">
+        Sign in
+      </a>
+      <div
+        style={{
+          display: displayCreateAccount ? "flex" : "none",
+        }}
+        className="modal-overlay"
+      >
+        <div className="create_account_container">
+          <a href="#close_create_account" onClick={createAccountContainerDisplayer} className="close-button">X</a>
+          <div className="create_account_container_format">
+            <p style={{ fontSize: "30px" }}>Create your account</p>
+            <form>
+              <input type="text" id="name" placeholder="Name" required />
+              <input type="email" id="email_create_account" placeholder="Email" required />
+              <p className="create_account_DOB">Date of birth</p>
+              <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1rem" }}>
+                <select id="DD" defaultValue="day" required>
+                  <option value="day" disabled>Day</option>
+                  {DDA.map((d) => (
+                    <option key={d} value={d}>{d}</option>
+                  ))}
+                </select>
+                <select id="MM" defaultValue="month" required>
+                  <option value="month" disabled>Month</option>
+                  <option value="01">January</option>
+                  <option value="02">February</option>
+                  <option value="03">March</option>
+                  <option value="04">April</option>
+                  <option value="05">May</option>
+                  <option value="06">June</option>
+                  <option value="07">July</option>
+                  <option value="08">August</option>
+                  <option value="09">September</option>
+                  <option value="10">October</option>
+                  <option value="11">November</option>
+                  <option value="12">December</option>
+                </select>
+                <select id="YY" defaultValue="year" required>
+                  <option value="year" disabled>Year</option>
+                  {years.map((y) => (
+                    <option key={y} value={y}>{y}</option>
+                  ))}
+                </select>
+              </div>
+              <input type="password" id="password_create_account" placeholder="Password" required />
+              <a href="#create_account_submit" onClick={pushCreateAccountFormDataToBackend} className="submit-button1">
+                Create Account
+              </a>
+            </form>
+          </div>
         </div>
       </div>
-      {/*Displays when #sign_in anchor is pressed.*/}
-      <div style={{ display: displayLogin ? "flex" : "none", position: "absolute", zIndex: "9999", top: "0", left: "0", width: "100%", height: "100%", backgroundColor: "rgba(12, 151, 235, 0.3)" }}>
-        <div className="sign_in_container" style={{ backgroundColor: "white", width: "600px", height: "650px", position: "absolute", top: "10%", zIndex: "10000", left: "30%", borderBottomLeftRadius: "20px", borderBottomRightRadius: "20px", borderTopLeftRadius: "20px", borderTopRightRadius: "20px", opacity: "1" }}>
-            <a href="#close_login" onClick={signContainerDisplayer} style={{ fontFamily: "publicsans", textDecoration: "none", color: "black", cursor: "pointer", fontSize: "23px", paddingTop: "10px", paddingLeft: "15px", display: "inline-block" }}>X</a>
-            <div className="sign_in_format" style={{ paddingLeft: "6.5rem" }}>
-              <p style={{ fontFamily: "publicsans", fontSize: "30px" }}>Login to Warble</p>
-              <form>
-                <input type="email" id="email_sign_in" placeholder="Email" style={{ marginBottom: "20px", userSelect: "none", padding: "15px", width: "350px" }} required></input>
-                <input type="password" id="password_sign_in" placeholder="Password" style={{ marginBottom: "30px", userSelect: "none", padding: "15px", width: "350px" }} required></input>
-                <a href="#login_account_submit" style={{ position: "absolute", bottom: "5vh", left: "7vw", fontFamily: "publicsans", userSelect: "none", textDecoration: "none", border: "2px solid black", cursor: "pointer", padding: "10px 50px", borderBottomLeftRadius: "9999px", borderBottomRightRadius: "9999px", borderTopLeftRadius: "9999px", borderTopRightRadius: "9999px", color: "black" }}>Login</a>
-              </form>
-            </div>
+      <div
+        style={{
+          display: displayLogin ? "flex" : "none",
+        }}
+        className="modal-overlay"
+      >
+        <div className="sign_in_container">
+          <a href="#close_login" onClick={signContainerDisplayer} className="close-button">X</a>
+          <div className="sign_in_format">
+            <p style={{ fontSize: "30px" }}>Login to Warble</p>
+            <form>
+              <input type="email" id="email_sign_in" placeholder="Email" required />
+              <input type="password" id="password_sign_in" placeholder="Password" required />
+              <a href="#login_account_submit" className="submit-button2">Login</a>
+            </form>
+          </div>
         </div>
       </div>
     </>
@@ -142,21 +248,19 @@ function App() {
 }
 
 function pushCreateAccountFormDataToBackend() {
-  let name = document.getElementById("name").value;
+  let name = document.getElementById("name").value.trim();
   const email = document.getElementById("email_create_account").value;
   const day = document.getElementById("DD").value;
   const month = document.getElementById("MM").value;
   const year = document.getElementById("YY").value;
   const password = document.getElementById("password_create_account").value;
 
-  name = name.trim();
-
   const reqBody = {
     name,
     email,
     dateOfBirth: `${year}-${month}-${day}`,
     password
-  }
+  };
 
   fetch(`${urls().server_url}/api/register`, {
     method: "POST",
@@ -164,7 +268,7 @@ function pushCreateAccountFormDataToBackend() {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(reqBody)
-  }
-)}
+  });
+}
 
 export default App;
