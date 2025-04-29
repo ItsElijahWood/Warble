@@ -17,7 +17,7 @@ function App() {
   };
 
   const years = [];
-  for (let year = new Date().getFullYear(); year >= 1900; year--) {
+  for (let year = new Date().getFullYear(); year >= 1920; year--) {
     years.push(year);
   }
 
@@ -167,7 +167,7 @@ function App() {
           }
         `}
       </style>
-      <p className="title">Start warbling today</p>
+      <p className="title">Start Warbling Today</p>
       <a href="#create_account" onClick={createAccountContainerDisplayer} className="cta-button primary-button">
         Create an account
       </a>
@@ -238,7 +238,7 @@ function App() {
             <form>
               <input type="email" id="email_sign_in" placeholder="Email" required />
               <input type="password" id="password_sign_in" placeholder="Password" required />
-              <a href="#login_account_submit" className="submit-button2">Login</a>
+              <a href="#login_account_submit" onClick={pushLoginDataFormToBackend} className="submit-button2">Login</a>
             </form>
           </div>
         </div>
@@ -270,5 +270,38 @@ function pushCreateAccountFormDataToBackend() {
     body: JSON.stringify(reqBody)
   });
 }
+
+async function pushLoginDataFormToBackend() {
+  const email = document.getElementById("email_sign_in").value;
+  const password = document.getElementById("password_sign_in").value;
+
+  const reqBody = {
+    email,
+    password
+  };
+
+  try {
+    const res = await fetch(`${urls().server_url}/api/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(reqBody),
+    });
+
+    const data = await res.json();
+
+    if (data.Token) {
+      localStorage.setItem("token", data.Token);
+      console.log("Logged in successfully.");
+      window.location.href = "/content";
+    } else {
+      console.error("Login failed: ", data.error);
+    }
+  } catch (error) {
+    console.error("Request failed:", error);
+  }
+}
+
 
 export default App;
