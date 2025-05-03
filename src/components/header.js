@@ -29,6 +29,24 @@ function Header() {
     setProfileMenu(!displayProfileMenu);
   }
 
+  const settingsButton = () => {
+    window.location.href = '/account/settings';
+  }
+  const warbleTitle = () => {
+    window.location.href = '/content';
+  }
+
+  const logoutButton = () => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      return window.location.href = window.location;
+    }
+
+    localStorage.removeItem("token");
+    return window.location.href = window.location;
+  }
+
   return (
     <>
       <style>
@@ -41,16 +59,17 @@ function Header() {
       <div style={{ width: '100%', height: '80px', backgroundColor: "white", display: "flex", flexDirection: "column", justifyContent: "center" }}>
         <div style={{ paddingLeft: "2rem", display: "flex", alignItems: "center", justifyContent: "space-between", }}>
           <div>
-            <p style={{ fontSize: "22px", fontFamily: "publicsans" }}>Warble</p>
+            <p onClick={warbleTitle} style={{ fontSize: "22px", userSelect: "none", cursor: "pointer", fontFamily: "publicsans" }}>Warble</p>
           </div>
           <div style={{ display: "flex", justifyContent: "center", alignItems: "center", paddingRight: "1rem"}}>
-            <img ref={profileRef} onClick={ProfileMenu} style={{ cursor: "pointer", border: "2px solid black", borderRadius: "9999px", userSelect: "none" }} src="./default_profile.jpg" alt="Profile button" width="50px" height="50px"></img>
+            <img ref={profileRef} onClick={ProfileMenu} style={{ cursor: "pointer", border: "2px solid black", borderRadius: "9999px", userSelect: "none" }} src="/default_profile.jpg" alt="Profile button" width="50px" height="50px"></img>
           </div>
         </div>
       </div>
-      <div ref={menuRef} style={{ display: displayProfileMenu ? "flex" : "none", flexDirection: "column", borderRadius: "10px", position: "absolute", right: "10px", top: "70px", width: "150px", height: "150px", border: "2px solid black", alignItems: "center" }}>
+      <div ref={menuRef} style={{ zIndex: "9999", display: displayProfileMenu ? "flex" : "none", backgroundColor: "white", flexDirection: "column", borderRadius: "10px", position: "absolute", right: "10px", top: "70px", width: "150px", height: "150px", border: "2px solid black", alignItems: "center" }}>
         <a className="menu-button" href="#profile" style={{ textDecoration: "none", height: "20px", width: "80%", padding: "8px", color: "black", fontFamily: "publicsans", borderRadius: "15px", marginTop: "0.5rem" }}>Profile</a>
-        <a className="menu-button" href="#settings" style={{ textDecoration: "none", height: "20px", width: "80%", padding: "8px", color: "black", fontFamily: "publicsans", borderRadius: "15px" }}>Settings</a>
+        <a className="menu-button" onClick={settingsButton} href="#settings" style={{ textDecoration: "none", height: "20px", width: "80%", padding: "8px", color: "black", fontFamily: "publicsans", borderRadius: "15px" }}>Settings</a>
+        <a className="menu-button" onClick={logoutButton} href="#logout" style={{ textDecoration: "none", height: "20px", width: "80%", padding: "8px", color: "black", fontFamily: "publicsans", borderRadius: "15px" }}>Logout</a>
       </div>
     </>
   )

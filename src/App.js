@@ -73,10 +73,8 @@ function App() {
             width: 90%;
             max-width: 600px;
             height: 60%;
-            max-height: 90vh;
-            overflow-y: auto;
             position: absolute;
-            top: 20%;
+            top: 15%;
             left: 50%;
             transform: translateX(-50%);
             border-radius: 20px;
@@ -129,7 +127,7 @@ function App() {
             padding: 10px 50px;
             border-radius: 9999px;
             color: black;
-            margin-top: 12.5rem;
+            margin-top: 1rem;
           }	
 	  .submit-button2 {
             display: inline-block;
@@ -140,7 +138,6 @@ function App() {
             padding: 10px 50px;
             border-radius: 9999px;
             color: black;
-            margin-top: 24.5rem;
           }
           @media (max-width: 480px) {
             .title {
@@ -183,8 +180,8 @@ function App() {
         <div className="create_account_container">
           <a href="#close_create_account" onClick={createAccountContainerDisplayer} className="close-button">X</a>
           <div className="create_account_container_format">
-            <p style={{ fontSize: "30px" }}>Create your account</p>
-            <form>
+            <p style={{ fontSize: "30px", margin: "0" }}>Create your account</p>
+            <form style={{ paddingTop: "1.5rem" }}>
               <input type="text" id="name" placeholder="Name" required />
               <input type="email" id="email_create_account" placeholder="Email" required />
               <p className="create_account_DOB">Date of birth</p>
@@ -218,9 +215,12 @@ function App() {
                 </select>
               </div>
               <input type="password" id="password_create_account" placeholder="Password" required />
-              <a href="#create_account_submit" onClick={pushCreateAccountFormDataToBackend} className="submit-button1">
-                Create Account
-              </a>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+                <a href="#create_account_submit" onClick={pushCreateAccountFormDataToBackend} className="submit-button1">
+                  Create Account
+                </a>
+                <p id="err-msg-ca"></p>
+              </div>
             </form>
           </div>
         </div>
@@ -238,7 +238,10 @@ function App() {
             <form>
               <input type="email" id="email_sign_in" placeholder="Email" required />
               <input type="password" id="password_sign_in" placeholder="Password" required />
-              <a href="#login_account_submit" onClick={pushLoginDataFormToBackend} className="submit-button2">Login</a>
+              <div style={{ justifyContent: "space-between", display: "flex", marginTop: "10rem" }}>
+                  <a href="#login_account_submit" onClick={pushLoginDataFormToBackend} className="submit-button2">Login</a>
+                  <p id="err-msg"></p>
+              </div>
             </form>
           </div>
         </div>
@@ -247,13 +250,18 @@ function App() {
   );
 }
 
-function pushCreateAccountFormDataToBackend() {
+async function pushCreateAccountFormDataToBackend() {
   let name = document.getElementById("name").value.trim();
   const email = document.getElementById("email_create_account").value;
   const day = document.getElementById("DD").value;
   const month = document.getElementById("MM").value;
   const year = document.getElementById("YY").value;
   const password = document.getElementById("password_create_account").value;
+  const errmsgca = document.getElementById("err-msg-ca");
+
+  if (year === "year" || month === "month" || day === "day") {
+    return errmsgca.innerHTML = "Required fields missing.";
+  }
 
   const reqBody = {
     name,
@@ -262,18 +270,31 @@ function pushCreateAccountFormDataToBackend() {
     password
   };
 
-  fetch(`${urls().server_url}/api/register`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(reqBody)
-  });
+  try {
+    const res = await fetch(`${urls().server_url}/api/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(reqBody)
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      window.location.href = window.location.href = "/";
+    } else if (res.status === 400) {
+      errmsgca.innerHTML = data.Error;
+    }
+  } catch (e) {
+    console.error(e);
+  }
 }
 
 async function pushLoginDataFormToBackend() {
   const email = document.getElementById("email_sign_in").value;
   const password = document.getElementById("password_sign_in").value;
+  const errmsg = document.getElementById("err-msg");
 
   const reqBody = {
     email,
@@ -296,7 +317,9 @@ async function pushLoginDataFormToBackend() {
       console.log("Logged in successfully.");
       window.location.href = "/content";
     } else {
-      console.error("Login failed: ", data.error);
+      if (res.status === 400) {
+        errmsg.innerHTML = data.Error;
+      }
     }
   } catch (error) {
     console.error("Request failed:", error);
